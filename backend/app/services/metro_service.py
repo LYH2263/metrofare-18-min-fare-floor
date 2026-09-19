@@ -35,10 +35,19 @@ class MetroService:
     def settings(self):
         return settings_repo.get_map(self._conn)
 
+    def update_settings(self, values: dict):
+        if "floor_fare" in values:
+            floor_fare = values["floor_fare"]
+            if floor_fare is None or float(floor_fare) <= 0:
+                raise ValueError("floor_fare 必须为正数")
+            settings_repo.set_value(self._conn, "floor_fare", str(round(float(floor_fare), 2)))
+        return self.settings()
+
     def quote(self, start: str, end: str, persist: bool):
         edges = edges_repo.list_pairs(self._conn)
         rules = rules_repo.as_calc_rules(self._conn)
-        result = quote_route(edges, start, end, rules)
+        floor_fare = settings_repo.get_floor_fare(self._conn)
+        result = quote_route(edges, start, end, rules, floor_fare=floor_fare)
         run_id = None
         if persist and result.get("reachable"):
             run_id = runs_repo.insert(self._conn, "quote", {"start": start, "end": end}, result)
@@ -46,6 +55,9 @@ class MetroService:
 
     def history(self, limit=50):
         return runs_repo.list_recent(self._conn, limit)
+
+    def run_by_id(self, run_id: int):
+        return runs_repo.get_by_id(self._conn, run_id)
 
     def dashboard(self):
         st = stations_repo.list_all(self._conn)
