@@ -41,4 +41,7 @@ def init_db():
             ("quote", json.dumps({"start": "A1", "end": "A3"}), json.dumps(q1, ensure_ascii=False)),
         )
         conn.commit()
+    # 底价默认 2.0（低于 1 站档 3.0，默认不抬升）；老库启动时补齐该键
+    conn.execute("INSERT OR IGNORE INTO settings(key,value) VALUES ('min_fare','2.0')")
+    conn.commit()
     conn.close()

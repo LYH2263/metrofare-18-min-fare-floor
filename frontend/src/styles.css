@@ -17,3 +17,9 @@ button { background: var(--accent); border:0; padding:0.4rem 0.85rem; border-rad
 .hero-num { font-size:2.2rem; font-weight:700; color: var(--accent); }
 .muted { color: var(--muted); }
 input, select { background:#0a1528; border:1px solid var(--muted); color:var(--text); padding:0.35rem; border-radius:4px; }
+.fare-duo { display:flex; gap:2rem; }
+.fare-cell { min-width:8rem; }
+.lifted { color:#ffb703; font-weight:600; }
+.err { color:#ff6b6b; }
+.row-link { cursor:pointer; }
+.row-link:hover td { background:#1b2c52; }

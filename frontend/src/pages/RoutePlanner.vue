@@ -17,7 +17,15 @@ const run = async () => { out.value = await postJSON('/api/quote', { start: star
       <button @click="run">试算</button>
     </div>
     <div v-if="out" class="panel">
-      <p v-if="out.reachable">站数 {{ out.hops }} · 票价 <span class="hero-num">¥{{ out.fare }}</span></p>
+      <template v-if="out.reachable">
+        <p>站数 {{ out.hops }}</p>
+        <div class="fare-duo">
+          <div class="fare-cell"><div class="muted">分段价</div><div class="hero-num">¥{{ out.fare }}</div></div>
+          <div class="fare-cell"><div class="muted">应付</div><div class="hero-num">¥{{ out.payable }}</div></div>
+        </div>
+        <p v-if="out.lifted" class="lifted">已按底价抬升</p>
+        <p v-else class="muted">未抬升</p>
+      </template>
       <p v-else class="muted">不可达</p>
     </div>
   </div>
